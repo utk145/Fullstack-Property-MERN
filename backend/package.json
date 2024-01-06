@@ -1,0 +1,21 @@
+{
+  "name": "property-backend",
+  "version": "1.0.0",
+  "description": "the backend part of property real estate project",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon src/index.js"
+  },
+  "keywords": [
+    "mongodb",
+    "express",
+    "mongoose",
+    "nodemon"
+  ],
+  "author": "utk",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
