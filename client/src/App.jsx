@@ -1,8 +1,19 @@
 import React from 'react'
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { About, Home, Login, Profile, Register } from './pages/index.js'
+
 
 const App = () => {
   return (
-    <div className='bg-blue-800'>Frontend initial setup with cleaning of files</div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
