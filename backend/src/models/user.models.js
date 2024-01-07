@@ -1,4 +1,7 @@
 import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -27,6 +30,20 @@ const userSchema = new mongoose.Schema({
 
 }, { timestamps: true })
 
+
+// encrypting the password. we use pre hook(a middleware) so that we encrpyt it just before saving 
+userSchema.pre("save", async function (next) {
+    if (this.isModified("password")) {
+        this.password = await bcrypt.hash(this.password, 10)
+    }
+    next()
+})
+
+
+// but now we need a method to compare the originial password with the encrypted one from db
+userSchema.methods.isPasswordCorrect = async function (password) {
+    return await bcrypt.compare(password, this.password)
+}
 
 
 export const User = mongoose.model("User", userSchema)
