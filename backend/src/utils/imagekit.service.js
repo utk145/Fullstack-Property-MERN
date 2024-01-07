@@ -19,7 +19,8 @@ const uploadOnImagekit = async (localFilePath) => {
         const response = await imagekit.upload({ file: fs.createReadStream(localFilePath), fileName: "my_file_name", contentType: contentType })
         console.log(response); // https://docs.imagekit.io/api-reference/upload-file-api/server-side-file-upload#response-code-and-structure-json
         console.log("File has been uploaded succefully on imagekit");
-        console.log("obtained url is: ", response.url);        
+        // console.log("obtained url is: ", response.url);        
+        fs.unlinkSync(localFilePath)
         return response;
 
     } catch (error) {
