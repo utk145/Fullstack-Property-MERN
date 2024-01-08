@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const Register = () => {
 
   const [formData, setFormData] = useState({})
   const [file, setFile] = useState(null)
   const [avatarProvided, setAvatarProvided] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const nav = useNavigate();
 
   const handleChange = (e) => {
     setFormData(
@@ -19,6 +21,7 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     if (!file) {
       console.log("No file selected");
       return;
@@ -40,7 +43,15 @@ const Register = () => {
     )
     const data = await response.json();
     console.log(data);
-   
+    if (data?.success === false) {
+      setLoading(false);
+      return;
+    }
+    setLoading(false); 
+    setTimeout(() => {
+      setFormData(null)
+      nav('/login')
+    }, 1000)
   }
 
   return (
@@ -59,8 +70,8 @@ const Register = () => {
           </>
         }
 
-        <button className='bg-[#FD356E] p-3 rounded-lg uppercase mt-6 hover:bg-pink-600 disabled:bg-[#FD356E]'>
-          Register
+        <button disabled={loading} className='bg-[#FD356E] p-3 rounded-lg uppercase mt-6 hover:bg-pink-600 disabled:bg-[#FD356E]'>
+          {loading ? "Loading.." : "Register"}
         </button>
       </form>
       <div>
