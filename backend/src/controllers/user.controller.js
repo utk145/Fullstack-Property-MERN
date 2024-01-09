@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError.js"
 import { User } from "../models/user.models.js";
 import { uploadOnImagekit } from "../utils/imagekit.service.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import jwt from "jsonwebtoken";
 
 const registerUser = asyncHandler(async (req, res) => {
     /* Steps:
@@ -95,7 +96,7 @@ const loginUser = asyncHandler(async (req, res) => {
     7. success response 
     */
 
-    const {  email,password } = req.body;
+    const { email, password } = req.body;
     console.log(email);
 
     if (!email) {
@@ -159,4 +160,44 @@ const logOutUser = asyncHandler(async (req, res) => {
 
 })
 
-export { registerUser, loginUser, logOutUser }
+// This will act as an endpoint for frontend to update access token instead of re-signin the session if error 401 is received
+const refreshAccessToken = asyncHandler(async (req, res) => {
+    const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
+    if (!incomingRefreshToken) {
+        throw new ApiError(401, "Unauthorized access")
+    }
+
+    try {
+        const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET)
+
+        const user = await User.findById(decodedToken?._id)
+        if (!user) {
+            throw new ApiError(401, "Invalid refresh token")
+        }
+
+        if (incomingRefreshToken !== user?.refreshToken) {
+            throw new ApiError(401, "Refresh token is expired or used")
+        }
+
+
+        const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user?._id)
+
+        const options = {
+            httpOnly: true,
+            secure: true
+        }
+
+
+        return res
+            .status(200)
+            .cookie("accessToken", accessToken, options)
+            .cookie("refreshToken", refreshToken, options)
+            .json(new ApiResponse(200, user, "Access token refreshed successfully"));
+            
+    } catch (error) {
+        throw new ApiError(401, error?.message || "Invalid refresh token")
+    }
+
+})
+
+export { registerUser, loginUser, logOutUser, refreshAccessToken }
