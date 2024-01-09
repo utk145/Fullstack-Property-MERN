@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
+import { signInSuccess } from '../redux/user/user.slice.js'
 
 const Login = () => {
 
   const [formData, setFormData] = useState({})
   const nav = useNavigate();
-
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setFormData(
@@ -18,7 +20,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const response = await fetch("/api/v1/users/login",
       {
         method: "POST",
@@ -33,6 +35,7 @@ const Login = () => {
     if (data?.success === false) {
       return;
     }
+    dispatch(signInSuccess(data))
     setTimeout(() => {
       setFormData(null)
       nav('/')
@@ -46,8 +49,8 @@ const Login = () => {
         <input onChange={handleChange} type="email" className="border p-3 rounded-lg text-black" id='email' placeholder='Email' />
         <input onChange={handleChange} type="password" className="border p-3 rounded-lg text-black" id='password' placeholder='Password' />
 
-        <button  className='bg-[#FD356E] p-3 rounded-lg uppercase mt-6 hover:bg-pink-600 disabled:bg-[#FD356E]'>
-           Login
+        <button className='bg-[#FD356E] p-3 rounded-lg uppercase mt-6 hover:bg-pink-600 disabled:bg-[#FD356E]'>
+          Login
         </button>
       </form>
       <div>
