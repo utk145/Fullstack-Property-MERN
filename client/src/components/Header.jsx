@@ -1,7 +1,12 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useSelector } from "react-redux"
 
 const Header = () => {
+
+    const { currentUser } = useSelector(state => state.user)
+    // console.log("From header", currentUser);
+
     return (
         <header className='bg-slate-900 shadow-md shadow-slate-600'>
             <div className='flex items-center justify-between max-w-6xl mx-auto p-3 '>
@@ -22,9 +27,14 @@ const Header = () => {
                     <Link to={"/about"}>
                         <li className='hidden sm:inline text-slate-400 cursor-pointer hover:underline'>About</li>
                     </Link>
-                    <Link to={"/login"}>
-                        <li className='text-slate-400 cursor-pointer hover:underline'>Login</li>
+                    <Link to={"/profile"}>
+                        {currentUser ? (
+                            <img src={currentUser?.data?.user?.avatar} alt="bgo" className='w-7 h-7 rounded-full object-cover' />
+                        ) : (
+                            <li className='text-slate-400 cursor-pointer hover:underline'>Login</li>
+                        )}
                     </Link>
+
                 </ul>
             </div>
         </header>
