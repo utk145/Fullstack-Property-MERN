@@ -34,10 +34,6 @@ const Profile = () => {
   // console.log(formData);
   const handleUpdateDetailsSubmit = async (e) => {
     e.preventDefault();
-    
-    if (file) {
-      await handleUpdateAvatar();
-    }
 
     const response = await fetch("/api/v1/users/update-details", {
       method: "POST",
@@ -59,36 +55,15 @@ const Profile = () => {
 
   }
 
-  const fileRef = useRef(null);
-  const [file, setFile] = useState(undefined)
-  console.log(file);
 
-  
-  const handleUpdateAvatar = async () => {
-    const formData = new FormData();
-    formData.append("avatar", file);
 
-    const response = await fetch("/api/v1/users/update-avatar", {
-      method: "POST",
-      body: formData,
-    });
-
-    const data = await response.json();
-    console.log(data);
-
-    if (data?.success === false) {
-      return;
-    }
-    
-  };
 
 
   return (
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl text-center font-semibold my-7 '>Profile</h1>
       <form className='flex flex-col gap-4' onSubmit={handleUpdateDetailsSubmit}>
-        <input type="file" ref={fileRef} hidden accept='image/*' onChange={(e) => setFile(e.target.files[0])} />
-        <img onClick={() => fileRef.current.click()} src={currentUser?.data?.user?.avatar} alt="bgo" className='w-28 h-28 rounded-full object-cover cursor-pointer self-center mt-2' />
+        <img src={currentUser?.data?.user?.avatar} alt="bgo" className='w-28 h-28 rounded-full object-cover cursor-pointer self-center mt-2' />
         <p className='text-center'> <span>@</span><span className='italic'> {currentUser?.data?.user?.username}</span></p>
         <input onChange={handleChange} type="text" placeholder='username' className='border p-3 text-black rounded-lg' id='username' />
         <input onChange={handleChange} type="email" placeholder='email' className='border p-3 text-black rounded-lg' id='email' />
