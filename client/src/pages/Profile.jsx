@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { signOutUserSuccess } from '../redux/user/user.slice'
 import { Link, useNavigate } from 'react-router-dom'
@@ -55,11 +55,14 @@ const Profile = () => {
 
   }
 
+  const fileRef = useRef(null);
+
   return (
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl text-center font-semibold my-7 '>Profile</h1>
       <form className='flex flex-col gap-4' onSubmit={handleUpdateDetailsSubmit}>
-        <img src={currentUser?.data?.user?.avatar} alt="bgo" className='w-28 h-28 rounded-full object-cover cursor-pointer self-center mt-2' />
+        <input type="file" ref={fileRef} hidden accept='image/*' />
+        <img onClick={() => fileRef.current.click()} src={currentUser?.data?.user?.avatar} alt="bgo" className='w-28 h-28 rounded-full object-cover cursor-pointer self-center mt-2' />
         <p className='text-center'> <span>@</span><span className='italic'> {currentUser?.data?.user?.username}</span></p>
         <input onChange={handleChange} type="text" placeholder='username' className='border p-3 text-black rounded-lg' id='username' />
         <input onChange={handleChange} type="email" placeholder='email' className='border p-3 text-black rounded-lg' id='email' />
