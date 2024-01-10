@@ -193,11 +193,35 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             .cookie("accessToken", accessToken, options)
             .cookie("refreshToken", refreshToken, options)
             .json(new ApiResponse(200, user, "Access token refreshed successfully"));
-            
+
     } catch (error) {
         throw new ApiError(401, error?.message || "Invalid refresh token")
     }
 
 })
 
-export { registerUser, loginUser, logOutUser, refreshAccessToken }
+const changeCurrentPassword = asyncHandler(async (req, res) => {
+    const { oldPassword, newPassword } = req.body;
+    // console.log("oldpass",oldPassword);
+
+    try {
+        const user = await User.findById(req.user?._id)
+
+        const isPasswordValid = await user.isPasswordCorrect(oldPassword)
+        if (!isPasswordValid) {
+            throw new ApiError(400, "Incorrect old password ")
+        }
+
+        user.password = newPassword;
+        await user.save({ validateBeforeSave: false })
+
+        return res
+            .status(200)
+            .json(new ApiResponse(200, {}, "Password changed successfully"))
+    } catch (error) {
+        console.error(error); 
+    }
+
+})
+
+export { registerUser, loginUser, logOutUser, refreshAccessToken, changeCurrentPassword }

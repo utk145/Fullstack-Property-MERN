@@ -1,6 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { signOutUserSuccess } from '../redux/user/user.slice'
+import { Link } from 'react-router-dom'
 
 const Profile = () => {
 
@@ -25,9 +26,13 @@ const Profile = () => {
       <h1 className='text-3xl text-center font-semibold my-7 '>Profile</h1>
       <form className='flex flex-col gap-4'>
         <img src={currentUser?.data?.user?.avatar} alt="bgo" className='w-28 h-28 rounded-full object-cover cursor-pointer self-center mt-2' />
-        <input type="text" placeholder='username' className='border p-3 rounded-lg' id='username' />
-        <input type="email" placeholder='email' className='border p-3 rounded-lg' id='email' />
-        <input type="text" placeholder='password' className='border p-3 rounded-lg' id='password' />
+        <input type="text" placeholder='username' className='border p-3 text-black rounded-lg' id='username' />
+        <input type="email" placeholder='email' className='border p-3 text-black rounded-lg' id='email' />
+        {/* <input type="text" placeholder='password' className='border p-3 text-black rounded-lg' id='password' /> */}
+        <Link to="/profile/change-password" className="text-blue-500 cursor-pointer font-medium">
+          Change Password
+        </Link>
+
         <button className='bg-[#FD356E] p-3 rounded-lg uppercase mt-6 hover:bg-pink-600 disabled:bg-[#FD356E]'>Update</button>
       </form>
       <div className='flex justify-between mt-5'>
