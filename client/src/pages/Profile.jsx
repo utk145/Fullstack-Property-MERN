@@ -31,7 +31,7 @@ const Profile = () => {
       }
     )
   }
-  console.log(formData);
+  // console.log(formData);
   const handleUpdateDetailsSubmit = async (e) => {
     e.preventDefault();
 
@@ -43,14 +43,14 @@ const Profile = () => {
       body: JSON.stringify(formData)
     })
     const data = await response.json();
-    // console.log(data);
+    console.log(data);
     if (data?.success === false) {
       return;
     }
 
     setTimeout(() => {
       setFormData({})
-      nav('/login')
+      nav('/')
     }, 1000)
 
   }
@@ -60,6 +60,7 @@ const Profile = () => {
       <h1 className='text-3xl text-center font-semibold my-7 '>Profile</h1>
       <form className='flex flex-col gap-4' onSubmit={handleUpdateDetailsSubmit}>
         <img src={currentUser?.data?.user?.avatar} alt="bgo" className='w-28 h-28 rounded-full object-cover cursor-pointer self-center mt-2' />
+        <p className='text-center'> <span>@</span><span className='italic'> {currentUser?.data?.user?.username}</span></p>
         <input onChange={handleChange} type="text" placeholder='username' className='border p-3 text-black rounded-lg' id='username' />
         <input onChange={handleChange} type="email" placeholder='email' className='border p-3 text-black rounded-lg' id='email' />
         {/* <input type="text" placeholder='password' className='border p-3 text-black rounded-lg' id='password' /> */}
