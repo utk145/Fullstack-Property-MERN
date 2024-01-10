@@ -251,7 +251,7 @@ const updateAccountDeatils = asyncHandler(async (req, res) => {
 
     return res
         .status(200)
-        .json(new ApiResponse(200, {user}, "Account details updated successfully"))
+        .json(new ApiResponse(200, { user }, "Account details updated successfully"))
 
 
 })
@@ -277,7 +277,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
         { new: true }
     ).select("-password")
 
-    
+
 
 
     return res
@@ -286,4 +286,32 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 
 })
 
-export { registerUser, loginUser, logOutUser, refreshAccessToken, changeCurrentPassword, getCurrentUser, updateAccountDeatils, updateUserAvatar }
+const deleteUser = asyncHandler(async (req, res) => {
+
+    await User.findByIdAndDelete(
+        req.user._id,
+        {
+            $set: {
+                refreshToken: undefined
+            }
+        },
+        {
+            new: true
+        }
+    )
+
+    const options = {
+        httpOnly: true,
+        secure: true
+    };
+
+    return res
+        .status(200)
+        .clearCookie("accessToken", options)
+        .clearCookie("refreshToken", options)
+        .json(new ApiResponse(200, {}, "User deleted successfully.."))
+
+
+});
+
+export { registerUser, loginUser, logOutUser, refreshAccessToken, changeCurrentPassword, getCurrentUser, updateAccountDeatils, updateUserAvatar, deleteUser }
