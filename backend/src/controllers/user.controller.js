@@ -233,9 +233,10 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 const updateAccountDeatils = asyncHandler(async (req, res) => {
     const { username, email } = req.body;
 
-    if (!email || !username || email.trim() === '' || username.trim() === '') {
-        throw new ApiError(400, "Fields are required")
+    if ((!email || email.trim() === '') && (!username || username.trim() === '')) {
+        throw new ApiError(400, "At least one of the fields (email or username) is required and must not be empty");
     }
+
 
     const user = await User.findByIdAndUpdate(
         req.user?._id,
