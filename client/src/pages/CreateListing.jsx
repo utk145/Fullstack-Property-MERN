@@ -13,17 +13,27 @@ const CreateListing = () => {
         }
     );
     console.log("listing page form data: ", formData);
+
+    const [imageUploadError, setImageUploadError] = useState(false)
+
     const handleImageUpload = (e) => {
-        if (files.length > 0 && files.length < 7) {
+        if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
             const promises = [];
             for (let i = 0; i < files.length; i++) {
                 promises.push(storeImage(files[i]))
             }
-            Promise.all(promises).then((urls) => {
-                setFormData({ ...formData, imageUrls: formData.imageUrls.concat(urls) })
-            })
+            Promise.all(promises)
+                .then((urls) => {
+                    setFormData({ ...formData, imageUrls: formData.imageUrls.concat(urls) });
+                    setImageUploadError(false)
+                }).catch((error) => setImageUploadError("Image upload failed.. (2MB max per image)"))
+        } else if (files.length === 0) {
+            setImageUploadError("Atleast one image is required")
+        } else {
+            setImageUploadError("You can only upload six images per listing")
         }
     };
+
 
     const storeImage = async (file) => {
         return new Promise((resolve, reject) => {
@@ -109,6 +119,7 @@ const CreateListing = () => {
                         <input onChange={(e) => setFiles(e.target.files)} type="file" id='images' accept='image/*' multiple className='p-3 border border-gray-700 rounded-lg w-full' />
                         <button type='button' className='p-3 border border-fuchsia-600 text-fuchsia-600 rounded-lg uppercase hover:shadow-2xl disabled:opacity-80' onClick={handleImageUpload}>Upload</button>
                     </div>
+                    <p className='text-red-700 font-semibold text-sm'>{imageUploadError && imageUploadError}</p>
                     <button className='bg-fuchsia-900 p-3 rounded-lg uppercase font-semibold text-center hover:opacity-95'>Create Listing</button>
                 </div>
             </form>
