@@ -15,9 +15,12 @@ const CreateListing = () => {
     console.log("listing page form data: ", formData);
 
     const [imageUploadError, setImageUploadError] = useState(false)
+    const [uploadingImages, setUploadingImages] = useState(false);
 
     const handleImageUpload = (e) => {
         if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
+            setUploadingImages(true)
+            setImageUploadError(false)
             const promises = [];
             for (let i = 0; i < files.length; i++) {
                 promises.push(storeImage(files[i]))
@@ -26,11 +29,17 @@ const CreateListing = () => {
                 .then((urls) => {
                     setFormData({ ...formData, imageUrls: formData.imageUrls.concat(urls) });
                     setImageUploadError(false)
-                }).catch((error) => setImageUploadError("Image upload failed.. (2MB max per image)"))
+                    setUploadingImages(false)
+                })
+                .catch((error) => {
+                    setImageUploadError("Image upload failed.. (2MB max per image)");
+                    setUploadingImages(false)
+                })
         } else if (files.length === 0) {
             setImageUploadError("Atleast one image is required")
         } else {
             setImageUploadError("You can only upload six images per listing")
+            setUploadingImages(false)
         }
     };
 
@@ -126,12 +135,12 @@ const CreateListing = () => {
                     <p className='font-semibold'>Images: <span className='font-normal text-gray-400 ml-2'>The first image will be the cover (max 6) </span></p>
                     <div className="flex gap-4">
                         <input onChange={(e) => setFiles(e.target.files)} type="file" id='images' accept='image/*' multiple className='p-3 border border-gray-700 rounded-lg w-full' />
-                        <button type='button' className='p-3 border border-fuchsia-600 text-fuchsia-600 rounded-lg uppercase hover:shadow-2xl disabled:opacity-80' onClick={handleImageUpload}>Upload</button>
+                        <button disabled={uploadingImages} type='button' className='p-3 border border-fuchsia-600 text-fuchsia-600 rounded-lg uppercase hover:shadow-2xl disabled:opacity-80' onClick={handleImageUpload}>{uploadingImages ? "Uploading..." : "Upload"}</button>
                     </div>
                     <p className='text-red-700 font-semibold text-sm'>{imageUploadError && imageUploadError}</p>
                     {formData.imageUrls.length > 0 && formData.imageUrls.map((url, indx) => (
                         // <img src={url} alt="image-urls" className='w-40 h-40 object-cover rounded-lg' key={indx + 1} />
-                        <div className="flex items-center justify-between p-3">
+                        <div className="flex items-center justify-between p-3" key={indx+1}>
                             <img src={url} alt="listing-image" className='w-20 h-20 object-contain rounded-lg' key={indx + 1} />
                             <button type='button' onClick={() => handleDelImage(indx)} className='text-red-500 font-bold flex items-center justify-center gap-2 hover:opacity-60'> <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="2em" width="2em" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0z"></path><path d="M15 16h4v2h-4zm0-8h7v2h-7zm0 4h6v2h-6zM3 18c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2V8H3v10zM14 5h-3l-1-1H6L5 5H2v2h12z"></path></svg></button>
                         </div>
