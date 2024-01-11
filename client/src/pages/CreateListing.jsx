@@ -58,6 +58,15 @@ const CreateListing = () => {
         })
     }
 
+    const handleDelImage = (index) => {
+        setFormData(
+            {
+                ...formData,
+                imageUrls: formData.imageUrls.filter((url, i) => i !== index)
+            }
+        )
+    }
+
     return (
         <div className='p-3 max-w-4xl mx-auto '>
             <h1 className='text-4xl text-center my-5 font-semibold'>Create a Listing</h1>
@@ -120,6 +129,13 @@ const CreateListing = () => {
                         <button type='button' className='p-3 border border-fuchsia-600 text-fuchsia-600 rounded-lg uppercase hover:shadow-2xl disabled:opacity-80' onClick={handleImageUpload}>Upload</button>
                     </div>
                     <p className='text-red-700 font-semibold text-sm'>{imageUploadError && imageUploadError}</p>
+                    {formData.imageUrls.length > 0 && formData.imageUrls.map((url, indx) => (
+                        // <img src={url} alt="image-urls" className='w-40 h-40 object-cover rounded-lg' key={indx + 1} />
+                        <div className="flex items-center justify-between p-3">
+                            <img src={url} alt="listing-image" className='w-20 h-20 object-contain rounded-lg' key={indx + 1} />
+                            <button type='button' onClick={() => handleDelImage(indx)} className='text-red-500 font-bold flex items-center justify-center gap-2 hover:opacity-60'> <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="2em" width="2em" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0z"></path><path d="M15 16h4v2h-4zm0-8h7v2h-7zm0 4h6v2h-6zM3 18c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2V8H3v10zM14 5h-3l-1-1H6L5 5H2v2h12z"></path></svg></button>
+                        </div>
+                    ))}
                     <button className='bg-fuchsia-900 p-3 rounded-lg uppercase font-semibold text-center hover:opacity-95'>Create Listing</button>
                 </div>
             </form>
