@@ -84,6 +84,7 @@ const Profile = () => {
         </Link>
 
         <button className='bg-[#FD356E] p-3 rounded-lg uppercase mt-6 hover:bg-pink-600 disabled:bg-[#FD356E]'>Update</button>
+        <Link to={"/create-listing"} className='bg-fuchsia-900 p-3 rounded-lg uppercase text-center hover:opacity-95'>Create a Listing</Link>
       </form>
       <div className='flex justify-between mt-5'>
         <span className='text-red-700 cursor-pointer font-medium' onClick={handleDeleteUser}>Delete account</span>
