@@ -5,7 +5,7 @@ import { asyncHandler } from "../utils/asyncHandler.js"
 
 const createListing = asyncHandler(async (req, res) => {
     try {
-        const { name, description, address, regularPrice, discountPrice, bathrooms, bedrooms, parking, type, offer, furnished, userRef } = req.body;
+        const { name, description, address, regularPrice, discountPrice, bathrooms, bedrooms, parking, type, offer, furnished, userRef, imageUrls } = req.body;
 
         if ([name, description, address, type, userRef].some((entry) => !entry || entry?.trim() === "")) {
             throw new ApiError(400, "All fields are required")
@@ -21,7 +21,7 @@ const createListing = asyncHandler(async (req, res) => {
             throw new ApiError(400, "Numeric fields must be non-negative");
         }
 
-        const imageUrls = ["fh", "gf"]
+
         const listing = await Listing.create({
             name, description, address, regularPrice, discountPrice, bathrooms, bedrooms, parking, type, offer, furnished, userRef, imageUrls
         })
@@ -40,4 +40,16 @@ const createListing = asyncHandler(async (req, res) => {
     }
 })
 
-export { createListing }
+const getUserListings = asyncHandler(async (req, res) => {
+
+    const listings = await Listing.find({ userRef: req.params.id })
+    if (!listings) {
+        throw new ApiError(404, "Listings associated with this account not found")
+    }
+
+    return res.status(200).json(new ApiResponse(200, listings, "Listings fetched successfully"))
+
+})
+
+
+export { createListing, getUserListings }

@@ -30,6 +30,29 @@ const CreateListing = () => {
     );
     // console.log("listing page form data: ", formData);
 
+    const storeImage = async (file) => {
+        return new Promise((resolve, reject) => {
+            const storage = getStorage(app);
+            const fileName = new Date().getTime() + file.name;
+            const storageRef = ref(storage, fileName)
+            const uploadTask = uploadBytesResumable(storageRef, file);
+            uploadTask.on("state_changed",
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log(`Upload is ${progress}% done `);
+                },
+                (error) => {
+                    reject(error)
+                },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
+                        resolve(downloadUrl)
+                    })
+                }
+            )
+        })
+    }
+
     const [imageUploadError, setImageUploadError] = useState(false)
     const [uploadingImages, setUploadingImages] = useState(false);
 
@@ -60,28 +83,7 @@ const CreateListing = () => {
     };
 
 
-    const storeImage = async (file) => {
-        return new Promise((resolve, reject) => {
-            const storage = getStorage(app);
-            const fileName = new Date().getTime() + file.name;
-            const storageRef = ref(storage, fileName)
-            const uploadTask = uploadBytesResumable(storageRef, file);
-            uploadTask.on("state_changed",
-                (snapshot) => {
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    console.log(`Upload is ${progress}% done `);
-                },
-                (error) => {
-                    reject(error)
-                },
-                () => {
-                    getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
-                        resolve(downloadUrl)
-                    })
-                }
-            )
-        })
-    }
+
 
     const handleDelImage = (index) => {
         setFormData(
@@ -136,6 +138,7 @@ const CreateListing = () => {
     const [loading, setLoading] = useState();
     const handleCreateListing = async (e) => {
         e.preventDefault();
+        console.log("FormData before submission:", formData);
         try {
 
             if (formData.imageUrls.length < 1) {
@@ -166,7 +169,7 @@ const CreateListing = () => {
             if (data.success === false) {
                 setListingError(data.message)
             }
-            nav(`/listing/${data.data._id}`)
+            nav(`/listings/${data.data._id}`)
 
         } catch (error) {
             setListingError(error.message)
@@ -257,7 +260,7 @@ const CreateListing = () => {
                             <button type='button' onClick={() => handleDelImage(indx)} className='text-red-500 font-bold flex items-center justify-center gap-2 hover:opacity-60'> <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="2em" width="2em" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0z"></path><path d="M15 16h4v2h-4zm0-8h7v2h-7zm0 4h6v2h-6zM3 18c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2V8H3v10zM14 5h-3l-1-1H6L5 5H2v2h12z"></path></svg></button>
                         </div>
                     ))}
-                    <button  disabled={loading || uploadingImages} className='bg-fuchsia-900 p-3 rounded-lg uppercase font-semibold text-center hover:opacity-95'>{loading ? 'Creating...' : "Create Listing"}</button>
+                    <button disabled={loading || uploadingImages} className='bg-fuchsia-900 p-3 rounded-lg uppercase font-semibold text-center hover:opacity-95'>{loading ? 'Creating...' : "Create Listing"}</button>
                     {listingError && <p className='text-red-700 font-semibold text-sm'>{listingError}</p>}
                 </div>
             </form>
