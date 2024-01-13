@@ -75,4 +75,27 @@ const deleteListing = asyncHandler(async (req, res) => {
 
 })
 
-export { createListing, getUserListings, deleteListing }
+const updateListing = asyncHandler(async (req, res) => {
+
+    const listing = await Listing.findById(req.params.id);
+    if (!listing) {
+        throw new ApiError(404, "Listing couldn't be found")
+    };
+
+    if (req.user.id !== listing.userRef) {
+        throw new ApiError(401, "Unauthorized to access this request of editing a listing")
+    };
+
+    const updatedListing = await Listing.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new: true }
+    )
+
+    res
+        .status(200)
+        .json(new ApiResponse(200, updatedListing, "Listing has been successfully updated"))
+
+})
+
+export { createListing, getUserListings, deleteListing, updateListing }
