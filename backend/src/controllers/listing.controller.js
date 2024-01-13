@@ -52,7 +52,7 @@ const getUserListings = asyncHandler(async (req, res) => {
 })
 
 const deleteListing = asyncHandler(async (req, res) => {
-    console.log(req.user);
+    // console.log(req.user);
     const listing = await Listing.findById(req.params.id);
     if (!listing) {
         throw new ApiError(404, "Listing not found")
