@@ -51,5 +51,28 @@ const getUserListings = asyncHandler(async (req, res) => {
 
 })
 
+const deleteListing = asyncHandler(async (req, res) => {
+    console.log(req.user);
+    const listing = await Listing.findById(req.params.id);
+    if (!listing) {
+        throw new ApiError(404, "Listing not found")
+    }
 
-export { createListing, getUserListings }
+    if (req.user.id !== listing.userRef) {
+        throw new ApiError(401, "You are unauthorized to perform this action")
+    }
+    /* In Mongoose, when you define a schema, the _id field is automatically added to the schema as an ObjectId. Mongoose also
+       provides a virtual getter for the id field, which returns a string representation of the _id. 
+       This is why req.user.id works while req.user._id might not work as expected in some cases.
+    */
+
+    await Listing.findByIdAndDelete(req.params.id);
+
+    res
+        .status(200)
+        .json(new ApiResponse(200, {}, "Listing deleted successfully"))
+
+
+})
+
+export { createListing, getUserListings, deleteListing }
