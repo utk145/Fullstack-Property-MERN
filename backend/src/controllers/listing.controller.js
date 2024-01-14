@@ -68,7 +68,7 @@ const deleteListing = asyncHandler(async (req, res) => {
 
     await Listing.findByIdAndDelete(req.params.id);
 
-    res
+    return res
         .status(200)
         .json(new ApiResponse(200, {}, "Listing deleted successfully"))
 
@@ -92,10 +92,21 @@ const updateListing = asyncHandler(async (req, res) => {
         { new: true }
     )
 
-    res
+    return res
         .status(200)
         .json(new ApiResponse(200, updatedListing, "Listing has been successfully updated"))
 
 })
 
-export { createListing, getUserListings, deleteListing, updateListing }
+const getListingInfo = asyncHandler(async (req, res) => {
+    const listingDetails = await Listing.findById(req.params.id);
+    if (!listingDetails) {
+        throw new ApiError(404, "No listing found with that id")
+    }
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, listingDetails, "Listing info fetched successfully"))
+})
+
+export { createListing, getUserListings, deleteListing, updateListing, getListingInfo }
