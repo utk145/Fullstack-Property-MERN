@@ -234,7 +234,7 @@ const CreateListing = () => {
                         </div>
                         {formData.offer === true && (
                             <div className='flex items-center gap-2 text-black'>
-                                <input type="number" id='discountPrice' min={'0'} max={"1000"} required={true} className='px-2 py-1 border border-gray-300 rounded-lg'
+                                <input type="number" id='discountPrice' min={'0'} max={"10000"} required={true} className='px-2 py-1 border border-gray-300 rounded-lg'
                                     onChange={handleChange}
                                     value={formData.discountPrice}
                                 />
