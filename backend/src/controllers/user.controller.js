@@ -314,4 +314,15 @@ const deleteUser = asyncHandler(async (req, res) => {
 
 });
 
-export { registerUser, loginUser, logOutUser, refreshAccessToken, changeCurrentPassword, getCurrentUser, updateAccountDeatils, updateUserAvatar, deleteUser }
+const getUserInfo = asyncHandler(async (req, res) => {
+    const userId = req.params.id;
+    const user = await User.findById(userId).select("-password -refreshToken")
+    if (!user) {
+        throw new ApiError(404, "User credentials not found for given userId");
+    }
+    return res
+        .status(200)
+        .json(new ApiResponse(200, user, "Details of the user fetched successfully"))
+})
+
+export { registerUser, loginUser, logOutUser, refreshAccessToken, changeCurrentPassword, getCurrentUser, updateAccountDeatils, updateUserAvatar, deleteUser, getUserInfo }
