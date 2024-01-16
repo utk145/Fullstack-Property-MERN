@@ -17,6 +17,15 @@ const Header = () => {
         nav(`/search?${searchQueries}`)
     }
 
+    React.useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchTermFromUrl = urlParams.get("searchTerm");
+        if (searchTermFromUrl)
+            setSearchTerm(searchTermFromUrl)
+
+    }, [window.location.search])
+
+
     return (
         <header className='bg-slate-900 shadow-md shadow-slate-600'>
             <div className='flex items-center justify-between max-w-6xl mx-auto p-3 '>
