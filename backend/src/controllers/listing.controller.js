@@ -109,4 +109,63 @@ const getListingInfo = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, listingDetails, "Listing info fetched successfully"))
 })
 
-export { createListing, getUserListings, deleteListing, updateListing, getListingInfo }
+const getAllListings = asyncHandler(async (req, res) => {
+
+    try {
+        const limit = parseInt(req.query.limit) || 8;
+        const startIndex = parseInt(req.query.startIndex) || 0;
+
+        let offer = req.query.offer;
+        if (offer === undefined || offer === false) {
+            offer = { $in: [true, false] }
+        }
+
+        let furnished = req.query.furnished;
+        if (furnished === undefined || furnished === false) {
+            furnished = { $in: [true, false] }
+        }
+
+
+        let parking = req.query.parking;
+        if (parking === undefined || parking === false) {
+            parking = { $in: [true, false] }
+        }
+        let type = req.query.type;
+        if (type === undefined || type === 'all') {
+            type = { $in: ["rent", "sell"] }
+        }
+
+
+        const searchTerm = req.query.searchTerm || "";
+        const sort = req.query.sort || "createdAt";
+        const order = req.query.order || "desc";
+
+        const listings = await Listing.find(
+            {
+                name: {
+                    $regex: searchTerm, /* regex will enable find everywhere in the data */
+                    $options: "i" /* ignores upper and lower case */
+                },
+                offer,
+                furnished,
+                parking,
+                type
+            }
+        )
+            .sort({ [sort]: order })
+            .limit(limit)
+            .skip(startIndex);
+
+
+        return res
+            .status(200)
+            .json(new ApiResponse(200, listings, "Fetched"))
+
+    } catch (error) {
+        throw new ApiError(400, error.message)
+    }
+
+
+})
+
+export { createListing, getUserListings, deleteListing, updateListing, getListingInfo, getAllListings }
