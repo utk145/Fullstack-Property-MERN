@@ -7,5 +7,6 @@ import PasswordChange from "./PasswordChange"
 import CreateListing from "./CreateListing"
 import UpdateListing from "./UpdateListing"
 import Listing from "./Listing"
+import Search from "./Search"
 
-export { Home, Profile, Login, About, Register, PasswordChange, CreateListing, UpdateListing, Listing }
+export { Home, Profile, Login, About, Register, PasswordChange, CreateListing, UpdateListing, Listing, Search }
