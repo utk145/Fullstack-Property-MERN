@@ -64,7 +64,7 @@ const Listing = () => {
                         <Swiper navigation>
                             {imageUrls?.map((item, indx) =>
                                 <SwiperSlide key={indx + 1}>
-                                    <div className='h-[500px]' style={{ background: `url(${item}) center no-repeat`, backgroundSize: "auto" }}>
+                                    <div className='h-[500px]' style={{ background: `url(${item}) center no-repeat`, backgroundSize: "contain" }}>
 
                                     </div>
                                 </SwiperSlide>

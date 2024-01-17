@@ -16,7 +16,7 @@ const Search = () => {
 
     const [loading, setLoading] = useState(false);
     const [listings, setListings] = useState([]);
-
+    const [showMore, setShowMore] = useState(true);
 
     useEffect(() => {
         const urlInfo = new URLSearchParams(window.location.search)
@@ -29,7 +29,7 @@ const Search = () => {
         const orderFromUrl = urlInfo.get('order');
 
 
-        if (searchTermFromUrl || typeFromUrl || parkingFromUrl || furnishedFromUrl || sortFromUrl || offerFromUrl) {
+        if (searchTermFromUrl || typeFromUrl || parkingFromUrl || furnishedFromUrl || sortFromUrl || offerFromUrl || orderFromUrl) {
             setSidebarData({
                 searchTerm: searchTermFromUrl || "",
                 type: typeFromUrl || 'all',
@@ -47,8 +47,13 @@ const Search = () => {
             const searchQuery = urlInfo.toString();
             const response = await fetch(`/api/v1/listings/get-listings?${searchQuery}`);
             const data = await response.json();
-            setListings(data?.data)
-            setLoading(false)
+            setListings(data?.data);
+            setLoading(false);
+
+            if (data.length < 9) {
+                setShowMore(false);
+            }
+
         }
 
         fetchListings();
@@ -57,7 +62,7 @@ const Search = () => {
     }, [window.location.search])
 
     console.log(listings);
-
+    console.log(showMore);
 
     const handleSidebarDataChange = (e) => {
         if (e.target.id === 'all' || e.target.id === 'rent' || e.target.id === "sell") {
@@ -99,7 +104,19 @@ const Search = () => {
         nav(`/search?${searchQuery}`)
     };
 
-
+    const onClickShowMore = async () => {
+        const numberOfListings = listings.length;
+        const startIndex = numberOfListings;
+        const urlParams = new URLSearchParams(location.search);
+        urlParams.set('startIndex', startIndex);
+        const searchQuery = urlParams.toString();
+        const response = await fetch(`/api/v1/listings/get-listings?${searchQuery}`)
+        const data = await response.json();
+        if (data?.data.length > 0) {
+            setShowMore(false)
+        }
+        setListings(prevListings => [...prevListings, ...data?.data]);
+    };
 
     return (
         <div className='flex flex-col md:flex-row'>
@@ -192,10 +209,13 @@ const Search = () => {
                             <span className="sr-only">Loading...</span>
                         </div>
                     )}
-                    { !loading && listings.length>0 && listings.map((item)=>(
-                        <ListingItem listing={item} key={item._id}/>
+                    {!loading && listings.length > 0 && listings.map((item) => (
+                        <ListingItem listing={item} key={item._id} />
                     ))}
                 </div>
+                {showMore && (
+                    <button onClick={onClickShowMore} className='px-2 py-1 bg-yellow-800 text-white ml-4 mb-5 hover:opacity-90 hover:underline'>Show More</button>
+                )}
             </div>
         </div>
     )
