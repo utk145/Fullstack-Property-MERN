@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 const Search = () => {
-
+    const nav = useNavigate();
     const [sidebarData, setSidebarData] = useState({
         searchTerm: '',
         type: 'all',
@@ -34,12 +35,53 @@ const Search = () => {
 
     };
 
-    console.log(sidebarData);
+    // console.log(sidebarData);
+
+    const handleSearchSubmit = (e) => {
+        // when the button is clicked, i want the form to submit and upload data and change url
+        e.preventDefault();
+        //first get information of the url
+        const urlParams = new URLSearchParams()
+        urlParams.set("searchTerm", sidebarData.searchTerm);
+        urlParams.set("type", sidebarData.type);
+        urlParams.set("parking", sidebarData.parking);
+        urlParams.set("sort", sidebarData.sort);
+        urlParams.set("order", sidebarData.order);
+        urlParams.set("furnished", sidebarData.furnished);
+        const searchQuery = urlParams.toString();
+        nav(`/search?${searchQuery}`)
+    };
+
+    useEffect(() => {
+        const urlInfo = new URLSearchParams(window.location.search)
+        const searchTermFromUrl = urlInfo.get("searchTerm")
+        const typeFromUrl = urlInfo.get("type")
+        const parkingFromUrl = urlInfo.get("parking")
+        const furnishedFromUrl = urlInfo.get("furnished")
+        const sortFromUrl = urlInfo.get("sort")
+        const offerFromUrl = urlInfo.get("offer")
+
+        if (searchTermFromUrl || typeFromUrl || parkingFromUrl || furnishedFromUrl || sortFromUrl || offerFromUrl) {
+            setSidebarData({
+                searchTerm: searchTermFromUrl || "",
+                type: typeFromUrl || 'all',
+                parking: parkingFromUrl === "true" ? true : false,
+                furnished: furnishedFromUrl === "true" ? true : false,
+                offer: offerFromUrl === "true" ? true : false,
+                sort: sortFromUrl || "createdAt",
+                order: offerFromUrl || "desc",
+            })
+        }
+
+    }, [window.location.search])
+
 
     return (
         <div className='flex flex-col md:flex-row'>
             <div className="p-7 border-b-2 md:border-r-2 md:min-h-screen">
-                <form className='flex flex-col gap-8'>
+                <form className='flex flex-col gap-8'
+                    onSubmit={handleSearchSubmit}
+                >
                     <div className="flex gap-3 items-center">
                         <label className='whitespace-nowrap font-semibold'>Search Term</label>
                         <input type="text" id='searchTerm'
