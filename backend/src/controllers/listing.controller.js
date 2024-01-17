@@ -116,18 +116,18 @@ const getAllListings = asyncHandler(async (req, res) => {
         const startIndex = parseInt(req.query.startIndex) || 0;
 
         let offer = req.query.offer;
-        if (offer === undefined || offer === false) {
+        if (offer === undefined || offer === 'false') {
             offer = { $in: [true, false] }
         }
 
         let furnished = req.query.furnished;
-        if (furnished === undefined || furnished === false) {
+        if (furnished === undefined || furnished === 'false') {
             furnished = { $in: [true, false] }
         }
 
 
         let parking = req.query.parking;
-        if (parking === undefined || parking === false) {
+        if (parking === undefined || parking === 'false') {
             parking = { $in: [true, false] }
         }
         let type = req.query.type;
@@ -144,7 +144,7 @@ const getAllListings = asyncHandler(async (req, res) => {
             {
                 name: {
                     $regex: searchTerm, /* regex will enable find everywhere in the data */
-                    $options: "i" /* ignores upper and lower case */
+                    $options: 'i' /* ignores upper and lower case */
                 },
                 offer,
                 furnished,

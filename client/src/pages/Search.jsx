@@ -13,6 +13,51 @@ const Search = () => {
         order: 'desc',
     });
 
+    const [loading, setLoading] = useState(false);
+    const [listings, setListings] = useState([]);
+
+
+    useEffect(() => {
+        const urlInfo = new URLSearchParams(window.location.search)
+        const searchTermFromUrl = urlInfo.get("searchTerm")
+        const typeFromUrl = urlInfo.get("type")
+        const parkingFromUrl = urlInfo.get("parking")
+        const furnishedFromUrl = urlInfo.get("furnished")
+        const sortFromUrl = urlInfo.get("sort")
+        const offerFromUrl = urlInfo.get("offer")
+        const orderFromUrl = urlInfo.get('order');
+        
+
+        if (searchTermFromUrl || typeFromUrl || parkingFromUrl || furnishedFromUrl || sortFromUrl || offerFromUrl) {
+            setSidebarData({
+                searchTerm: searchTermFromUrl || "",
+                type: typeFromUrl || 'all',
+                parking: parkingFromUrl === "true" ? true : false,
+                furnished: furnishedFromUrl === "true" ? true : false,
+                offer: offerFromUrl === "true" ? true : false,
+                sort: sortFromUrl || "createdAt",
+                order: orderFromUrl || "desc",
+            })
+        };
+
+
+        const fetchListings = async () => {
+            setLoading(true);
+            const searchQuery = urlInfo.toString();
+            const response = await fetch(`/api/v1/listings/get-listings?${searchQuery}`);
+            const data = await response.json();
+            setListings(data?.data)
+            setLoading(false)
+        }
+
+        fetchListings();
+
+
+    }, [window.location.search])
+
+    console.log(listings);
+
+
     const handleSidebarDataChange = (e) => {
         if (e.target.id === 'all' || e.target.id === 'rent' || e.target.id === "sell") {
             setSidebarData({ ...sidebarData, type: e.target.id })
@@ -48,32 +93,11 @@ const Search = () => {
         urlParams.set("sort", sidebarData.sort);
         urlParams.set("order", sidebarData.order);
         urlParams.set("furnished", sidebarData.furnished);
+        urlParams.set("offer", sidebarData.offer);
         const searchQuery = urlParams.toString();
         nav(`/search?${searchQuery}`)
     };
 
-    useEffect(() => {
-        const urlInfo = new URLSearchParams(window.location.search)
-        const searchTermFromUrl = urlInfo.get("searchTerm")
-        const typeFromUrl = urlInfo.get("type")
-        const parkingFromUrl = urlInfo.get("parking")
-        const furnishedFromUrl = urlInfo.get("furnished")
-        const sortFromUrl = urlInfo.get("sort")
-        const offerFromUrl = urlInfo.get("offer")
-
-        if (searchTermFromUrl || typeFromUrl || parkingFromUrl || furnishedFromUrl || sortFromUrl || offerFromUrl) {
-            setSidebarData({
-                searchTerm: searchTermFromUrl || "",
-                type: typeFromUrl || 'all',
-                parking: parkingFromUrl === "true" ? true : false,
-                furnished: furnishedFromUrl === "true" ? true : false,
-                offer: offerFromUrl === "true" ? true : false,
-                sort: sortFromUrl || "createdAt",
-                order: offerFromUrl || "desc",
-            })
-        }
-
-    }, [window.location.search])
 
 
     return (
