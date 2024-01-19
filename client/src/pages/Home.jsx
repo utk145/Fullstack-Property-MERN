@@ -1,8 +1,16 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import SwiperCore from "swiper"
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper/modules';
+import "swiper/css/bundle";
+import ListingItem from "../components/ListingItem";
 
 
 const Home = () => {
+
+  SwiperCore.use([Navigation]);
+
   // useEffect(() => {
   //   async function currUser() {
   //     const resp = await fetch("/api/v1/users/current-user")
@@ -24,7 +32,7 @@ const Home = () => {
   //   }
   //   currUser()
   // }, [])
-  
+
 
   const [offerListings, setOfferListings] = useState([]);
   const [saleListings, setSaleListings] = useState([]);
@@ -125,10 +133,57 @@ const Home = () => {
         <Link to={"/search"} className="text-xs sm:text-sm text-purple-500 font-bold hover:underline ">Explore now..</Link>
       </div>
 
+      <Swiper navigation>
+        {offerListings && offerListings.length > 1 && offerListings.map((item, indx) => (
+          <SwiperSlide key={indx+1}>
+            <div className='h-[500px]' style={{ background: `url(${item.imageUrls[0]}) center no-repeat`, backgroundSize: "cover" }} key={indx + 1}>
 
-      
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
 
-      <div className=""></div>
+      <div className='max-w-6xl mx-auto p-3 flex flex-col gap-8 my-10'>
+        {offerListings && offerListings.length > 0 && (
+          <div className=''>
+            <div className='my-3'>
+              <h2 className='text-2xl font-semibold text-slate-500'>Recent offers</h2>
+              <Link className='text-sm text-sky-400 hover:underline hover:underline-offset-4' to={'/search?offer=true'}>Show more offers</Link>
+            </div>
+            <div className='flex flex-wrap gap-4'>
+              {offerListings.map((listing) => (
+                <ListingItem listing={listing} key={listing._id} />
+              ))}
+            </div>
+          </div>
+        )}
+        {rentListings && rentListings.length > 0 && (
+          <div className=''>
+            <div className='my-3'>
+              <h2 className='text-2xl font-semibold text-slate-600'>Recent places for rent</h2>
+              <Link className='text-sm text-sky-400 hover:underline hover:underline-offset-4' to={'/search?type=rent'}>Show more places for rent</Link>
+            </div>
+            <div className='flex flex-wrap gap-4'>
+              {rentListings.map((listing) => (
+                <ListingItem listing={listing} key={listing._id} />
+              ))}
+            </div>
+          </div>
+        )}
+        {saleListings && saleListings.length > 0 && (
+          <div className=''>
+            <div className='my-3'>
+              <h2 className='text-2xl font-semibold text-slate-600'>Recent places for sale</h2>
+              <Link className='text-sm text-sky-400 hover:underline hover:underline-offset-4' to={'/search?type=sell'}>Show more places for sale</Link>
+            </div>
+            <div className='flex flex-wrap gap-4'>
+              {saleListings.map((listing) => (
+                <ListingItem listing={listing} key={listing._id} />
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
