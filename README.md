@@ -53,3 +53,13 @@ All sorts of contributions are welcomed. If you'd like to contribute simply fork
 
 
 Click [here](https://www.youtube.com/watch?v=yEP7psSjfhk&ab_channel=tanmaysharma) for demo of the application.
+
+
+
+![screencapture-localhost-5173-2024-01-19-18_56_33](https://github.com/utk145/Fullstack-Property-MERN/assets/122993091/51748a14-1440-4b79-957c-6669601eaf2e)
+
+
+
+
+
+
