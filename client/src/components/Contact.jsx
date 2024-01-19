@@ -72,7 +72,7 @@ const fetchUserInfo = async (userRef, setLandlord) => {
   try {
     const resp = await fetch(`/api/v1/users/getUserInfo/${userRef}`);
     const data = await resp.json();
-    console.log(data);
+    // console.log(data);
     setLandlord(data.data);
   } catch (error) {
     console.log('Error is', error);

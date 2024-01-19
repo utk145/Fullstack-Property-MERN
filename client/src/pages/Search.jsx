@@ -61,8 +61,8 @@ const Search = () => {
 
     }, [window.location.search])
 
-    console.log(listings);
-    console.log(showMore);
+    // console.log(listings);
+    // console.log(showMore);
 
     const handleSidebarDataChange = (e) => {
         if (e.target.id === 'all' || e.target.id === 'rent' || e.target.id === "sell") {

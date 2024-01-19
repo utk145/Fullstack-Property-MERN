@@ -10,7 +10,7 @@ const CreateListing = () => {
     const nav = useNavigate()
 
     const [files, setFiles] = useState([])
-    console.log(files);
+    // console.log(files);
 
     const [formData, setFormData] = useState(
         {
@@ -138,7 +138,7 @@ const CreateListing = () => {
     const [loading, setLoading] = useState();
     const handleCreateListing = async (e) => {
         e.preventDefault();
-        console.log("FormData before submission:", formData);
+        // console.log("FormData before submission:", formData);
         try {
 
             if (formData.imageUrls.length < 1) {
@@ -164,7 +164,7 @@ const CreateListing = () => {
                 }
             );
             const data = await response.json()
-            console.log("listing resp data: ", data);
+            // console.log("listing resp data: ", data);
             setLoading(false)
             if (data.success === false) {
                 setListingError(data.message)

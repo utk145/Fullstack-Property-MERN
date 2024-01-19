@@ -30,7 +30,7 @@ const Listing = () => {
             try {
                 const response = await fetch(`/api/v1/listings/get-listing-info/${params.id}`)
                 const data = await response.json();
-                console.log("Listing info is", data);
+                // console.log("Listing info is", data);
                 if (data.success === false) {
                     setLoading(false);
                     return;

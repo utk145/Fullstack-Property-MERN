@@ -10,7 +10,7 @@ const UpdateListing = () => {
     const nav = useNavigate()
 
     const [files, setFiles] = useState([])
-    console.log(files);
+    // console.log(files);
 
     const [formData, setFormData] = useState(
         {
@@ -36,7 +36,7 @@ const UpdateListing = () => {
             const listingId = params.id
             const resp = await fetch(`/api/v1/listings/get-listing-info/${listingId}`)
             const data = await resp.json();
-            console.log(data);
+            // console.log(data);
             if (data.success === false) {
                 console.log(data.message);
                 return;
@@ -155,7 +155,7 @@ const UpdateListing = () => {
     const [loading, setLoading] = useState();
     const handleUpdateListing = async (e) => {
         e.preventDefault();
-        console.log("FormData before submission:", formData);
+        // console.log("FormData before submission:", formData);
         try {
 
             if (formData.imageUrls.length < 1) {
@@ -181,7 +181,7 @@ const UpdateListing = () => {
                 }
             );
             const data = await response.json()
-            console.log("listing resp data: ", data);
+            // console.log("listing resp data: ", data);
             setLoading(false)
             if (data.success === false) {
                 setListingError(data.message)

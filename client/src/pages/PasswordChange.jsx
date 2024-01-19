@@ -43,7 +43,7 @@ const PasswordChange = () => {
         });
 
         const logoutData = await logoutResponse.json();
-        console.log("logout data after pass change: ", logoutData);
+        // console.log("logout data after pass change: ", logoutData);
         dispatch(signOutUserSuccess(data))
         setFormData({})
 

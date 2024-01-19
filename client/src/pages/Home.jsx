@@ -119,9 +119,9 @@ const Home = () => {
   }, []);
 
 
-  console.log("offerListings", offerListings);
-  console.log("rentListings", rentListings);
-  console.log("saleListings", saleListings);
+  // console.log("offerListings", offerListings);
+  // console.log("rentListings", rentListings);
+  // console.log("saleListings", saleListings);
 
 
 

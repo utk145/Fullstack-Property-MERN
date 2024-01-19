@@ -20,7 +20,7 @@ const Profile = () => {
       }
     )
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     dispatch(signOutUserSuccess(data))
   }
 
@@ -44,7 +44,7 @@ const Profile = () => {
       body: JSON.stringify(formData)
     })
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     dispatch(updateUserSuccess(data))
 
 
@@ -65,7 +65,7 @@ const Profile = () => {
       }
     )
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     dispatch(deleteUserSuccess(data))
   }
 
@@ -79,7 +79,7 @@ const Profile = () => {
         setShowListingError(data.message);
         return;
       }
-      console.log("listings are ", data.data);
+      // console.log("listings are ", data.data);
       setUserListings(data.data)
     } catch (error) {
       showListingError(error.message)
@@ -96,7 +96,7 @@ const Profile = () => {
       })
       const data = await response.json();
       setUserListings(prevListings => prevListings.filter(item => item._id !== listingId))
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       console.error("Error deleting listing:", error.message)
     }
