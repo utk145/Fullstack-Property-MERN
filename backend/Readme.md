@@ -2,7 +2,12 @@
 
 Welcome to the backend of NewWorld Properties, the engine that powers my property listing web app. This backend is built using a robust set of dependencies to ensure security, scalability, and efficiency in handling user data and property information keeping in mind production grade practices.
 
-Explaining the backend part is a drag, so I recommend you to explore the files to understand the best practices that I've followed to the best of my knowledge.
+Explaining the backend part is a drag, so I recommend you to explore the files to understand the best practices that I've followed to the best of my knowledge. Some of the highlights are:
+   - Caching on local server during image upload
+   - Heavily modular and maintainable codebase
+   - Proper error handling
+   - Appropriate middlewares
+   - Separate routes and controllers
 
 ## Tech Stack / Packages:
 - bcrypt
